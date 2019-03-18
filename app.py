@@ -4,11 +4,13 @@ import config
 import business_center
 import role
 import people
+from flask_cors import CORS
 
 uri = config.getNeo4jUri()
 driver = GraphDatabase.driver(uri, auth=(config.username, config.password))
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/',methods=['GET'])
 def index():
