@@ -4,19 +4,21 @@ import config
 import business_center
 import role
 import people
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 uri = config.getNeo4jUri()
 driver = GraphDatabase.driver(uri, auth=(config.username, config.password))
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, support_credentials=True)
 
 @app.route('/',methods=['GET'])
+@cross_origin(supports_credentials=True)
 def index():
     return "Success"
 
 @app.route('/getAllBusinessCenters',methods=['GET'])
+@cross_origin(supports_credentials=True)
 def getBusinessCenters():
     try:
         return business_center.getBusinessCenters(driver)
@@ -24,6 +26,7 @@ def getBusinessCenters():
         print("Some error which you'll need to debug")
 
 @app.route('/getAllRoles',methods=['GET'])
+@cross_origin(supports_credentials=True)
 def getRoles():
     try:
         return role.getRoles(driver)
@@ -31,6 +34,7 @@ def getRoles():
         print("Some error which you'll need to debug")
 
 @app.route('/getAllPeople',methods=['GET'])
+@cross_origin(supports_credentials=True)
 def getPeople():
     try:
         return people.getPeople(driver)
@@ -38,6 +42,7 @@ def getPeople():
         print("Some error which you'll need to debug")
 
 @app.route('/getPersonWithRole/<id>',methods=['POST','GET'])
+@cross_origin(supports_credentials=True)
 def getPeopleWithRole(id):
     try:
         return people.getPeopleWithRole(driver, id)
@@ -45,6 +50,7 @@ def getPeopleWithRole(id):
         print("Some error which you'll need to debug")
 
 @app.route('/getPersonWithBCenter/<id>',methods=['POST','GET'])
+@cross_origin(supports_credentials=True)
 def getPeopleWithBCenter(id):
     try:
         return people.getPeopleWithBCenter(driver, id)
@@ -52,6 +58,7 @@ def getPeopleWithBCenter(id):
         print("Some error which you'll need to debug")
 
 @app.route('/getPersonWithRoleUnderBCenter/<id>',methods=['POST','GET'])
+@cross_origin(supports_credentials=True)
 def getPersonWithRoleUnderBCenter(id=None):
     try:
         role = request.args.get('role')
@@ -61,4 +68,4 @@ def getPersonWithRoleUnderBCenter(id=None):
 
 
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port = 8000, debug=True)
